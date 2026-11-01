@@ -1,0 +1,82 @@
+
+services:
+
+  frontend:
+
+    build:
+
+      context: ./frontend
+
+      dockerfile: Dockerfile
+
+    ports:
+
+      - "3001:80"
+
+    environment:
+
+      PORT: 3001
+
+      MONGO_URI: ""
+
+    networks:
+
+      - mernnetwork
+
+  
+
+  backend:
+
+    build:
+
+      context: ./backend
+
+      dockerfile: Dockerfile
+
+    ports:
+
+      - "3002:3001"
+
+    mem_limit: 256m
+
+    cpus: 0.25
+
+    environment:
+
+      PORT: 3001
+
+      MONGO_URI: "mongodb://mongo:27017/TravelDBnew"
+
+    depends_on:
+
+      - mongo
+
+    networks:
+
+      - mernnetwork
+
+  mongo:
+
+    image: mongo
+
+    ports:
+
+      - "27018:27017"
+
+    volumes:
+
+      - mongodatavol:/data/db
+
+    networks:
+
+      - mernnetwork
+
+volumes:
+
+  mongodatavol:
+
+networks:
+
+  mernnetwork:
+
+    driver: bridge
